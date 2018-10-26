@@ -20,7 +20,6 @@ matInnerRectangleLengthB    =   275.0;  //mm
 numberOfMaleConnectors =  5;
     
 
-
 //*******************************************************************************
 
 
@@ -31,51 +30,68 @@ numberOfMaleConnectors =  5;
 
 linear_extrude(height = 10, center = true, convexity = 0, twist = 0)
 
- //minkowski(){
- union(){   
-        translate([0,0,0]) innerMatRectangle(matInnerRectangleLengthA,matInnerRectangleLengthB,true);
-        trapezoidFringe();
-        //trapezoid_rows();
-        //        translate([-trapezoid_height-distance_first_trapezoid,distance_first_trapezoid+trapezoid_height,0]) rotate([0,180,270]) //trapezoid_rows();
-    translate([-1.3,-1,0]) roundCorner();
 
+ union(){   
+    translate([0,0,0]) innerMatRectangle(matInnerRectangleLengthA,matInnerRectangleLengthB,true);
+    trapezoidFringe();
+     //translate([-1.3,-1,0])
 }
 
+
+
+
+
+
+
+
+
+
+//OLD
+//module roundCorner(){
+//
+//     difference(){
+//             translate([distanceFirstTrapazoidLongerPartFomEdge+3,-3]) square(size=[trapezoidBottomEdge/8,trapezoidHeight/4],   center=false);
+//         
+//          union(){
+//            translate([0,0,0]) innerMatRectangle(matInnerRectangleLengthA,matInnerRectangleLengthB,false);
+//            trapezoidFringe(false);
+//             
+//            intersection(){
+//                translate([2.2,1.55,0]) roundPoly();
+//                translate([3,-trapezoidHeight-1.6]) square(size=[trapezoidBottomEdge/2,trapezoidHeight+2],center=false);
+//            }
+//
+//
+//        }
+//    }
+//    
 //}
-
-
-
-
-
-
-
-
-
+//NEW
 module roundCorner(){
 
- difference(){
-     translate([distanceFirstTrapazoidLongerPartFomEdge+3,-3]) square(size=[trapezoidBottomEdge/8,trapezoidHeight/4],center=false);
- union(){
-    //union(){
-        translate([0,0,0]) innerMatRectangle(matInnerRectangleLengthA,matInnerRectangleLengthB,false);
-        trapezoidFringe(false);
-        //trapezoid_rows();
-        //        translate([-trapezoid_height-distance_first_trapezoid,distance_first_trapezoid+trapezoid_height,0]) rotate([0,180,270]) //trapezoid_rows();
-//}
+     difference(){
+             translate([distanceFirstTrapazoidLongerPartFomEdge+3,-3]) square(size=[trapezoidBottomEdge/8,trapezoidHeight/4],   center=false);
+         
+          union(){
+            translate([0,0,0]) innerMatRectangle(matInnerRectangleLengthA,matInnerRectangleLengthB,false);
+            translate([distanceFirstTrapazoidLongerPartFomEdge,0-trapezoidHeight,0.0])         
+              translate([0,0,0]) 
+              trapazoid(false);
+             
+            intersection(){
+                translate([2.2,1.55,0]) roundPoly();
+                translate([3,-trapezoidHeight-1.6]) square(size=[trapezoidBottomEdge/2,trapezoidHeight+2],center=false);
+            }
+
+
+        }
+    }
+    
 
 
 
 
-intersection(){
-translate([2.2,1.55,0]) roundPoly();
-translate([3,-trapezoidHeight-1.6]) square(size=[trapezoidBottomEdge/2,trapezoidHeight+2],center=false);
 }
-
-
-}
-}
-}
-
 
 
 
@@ -94,48 +110,43 @@ translate([3,-trapezoidHeight-1.6]) square(size=[trapezoidBottomEdge/2,trapezoid
 
 
 module innerMatRectangle(x,y,minkowskiParameter=true){
-          //linear_extrude(height = 10, center = true, convexity = 0, twist = 0)
     if(minkowskiParameter){
-    minkowski(){ 
-    square([x,y]);
-        circle(1);
+        minkowski(){ 
+            square([x,y]);
+            circle(1);
+        }
+    }
+    
+    else{
+        square([x,y]);
     }
 }
-else{
-        square([x,y]);
-}
-
-}
 
 
 
 
-//roundPoly();
+
 
 module roundPoly(minkowskiParameter=true){
-    //linear_extrude(height = 10, center = true, convexity = 0, twist = 0)
     translate([-trapezoidBottomEdge/2-1,-2.5,0])
     mirror([0,1,0])
     
-    
-    
-    
     if(minkowskiParameter){
-    minkowski(){
-        polygon(points=[[(trapezoidBottomEdge - trapezoidTopEdge)/2.0 ,   trapezoidHeight],
+        minkowski(){
+            polygon(points=[[(trapezoidBottomEdge - trapezoidTopEdge)/2.0 ,   trapezoidHeight],
                             [0,0],
                             [trapezoidBottomEdge  ,   0],
                             [trapezoidBottomEdge - (trapezoidBottomEdge - trapezoidTopEdge)/2.0 ,  trapezoidHeight]]); 
-        circle(1);
+            circle(1);
+        }
     }
-}
 
-else{
-    polygon(points=[[(trapezoidBottomEdge - trapezoidTopEdge)/2.0 ,   trapezoidHeight],
-                            [0,0],
-                            [trapezoidBottomEdge  ,   0],
-                            [trapezoidBottomEdge - (trapezoidBottomEdge - trapezoidTopEdge)/2.0 ,  trapezoidHeight]]); 
-    
+    else{
+        polygon(points=[[(trapezoidBottomEdge - trapezoidTopEdge)/2.0 ,   trapezoidHeight],
+                                [0,0],
+                                [trapezoidBottomEdge  ,   0],
+                                [trapezoidBottomEdge - (trapezoidBottomEdge - trapezoidTopEdge)/2.0 ,  trapezoidHeight]]); 
+        
     }
 }
 
@@ -149,36 +160,25 @@ else{
 
 
 module trapazoid(minkowskiParameter=true){
-     
-     //linear_extrude(height = 10, center = true, convexity = 0, twist = 0)
-  
-    //linear_extrude(height = 10, center = true, convexity = 0, twist = 0)
-     
+
     
     
     if(minkowskiParameter){
 
-        
-    minkowski(){   
-    polygon(points=[[(trapezoidBottomEdge - trapezoidTopEdge)/2.0 ,   trapezoidHeight],
+        minkowski(){   
+            polygon(points=[[(trapezoidBottomEdge - trapezoidTopEdge)/2.0 ,   trapezoidHeight],
                             [0,0],
                             [trapezoidBottomEdge  ,   0],
                             [trapezoidBottomEdge - (trapezoidBottomEdge - trapezoidTopEdge)/2.0 ,  trapezoidHeight]]);         
         
-        
-        
- circle(1);
-
-}
-}
-else{
-
-    
-    
-        polygon(points=[[(trapezoidBottomEdge - trapezoidTopEdge)/2.0 ,   trapezoidHeight],
-                            [0,0],
-                            [trapezoidBottomEdge  ,   0],
-                            [trapezoidBottomEdge - (trapezoidBottomEdge - trapezoidTopEdge)/2.0 ,  trapezoidHeight]]);     
+            circle(1);
+        }
+    }
+    else{
+        polygon(points=[    [(trapezoidBottomEdge - trapezoidTopEdge)/2.0 ,
+                             trapezoidHeight],[0,0],[trapezoidBottomEdge  ,   0],
+                             [trapezoidBottomEdge - (trapezoidBottomEdge - trapezoidTopEdge)/2.0 ,
+                             trapezoidHeight]]);     
 }
 }
 
@@ -204,7 +204,6 @@ else{
         } 
     else{    
         
-    //linear_extrude(height = 10, center = true, convexity = 0, twist = 0)
      polygon(points=[[(trapezoidBottomEdge - trapezoidTopEdge)/2.0 ,   trapezoidHeight],
                             [0,0],
                             [21 ,   0],
@@ -221,23 +220,45 @@ else{
 ************************************************************************************************/
 
 module trapezoidRows(minkowskiParameter=true) {
+  
     color([0.15,0.15,0.15]);
     for (i=[0:numberOfMaleConnectors-1]){
         
     if(i<numberOfMaleConnectors-1){ 
     translate([i*(trapezoidBottomEdge+trapezoidTopEdge),0,0])
-        //minkowski(){ 
         trapazoid(minkowskiParameter);
+        
+     
         }
-        //circle(1);
-    //}
+
      
        else {
            //TESTSetting
            minkowskiParameter=true;
-           #translate([i*(trapezoidBottomEdge+trapezoidTopEdge),0,0]) cornerPolygon(minkowskiParameter);   
+           translate([i*(trapezoidBottomEdge+trapezoidTopEdge),0,0]) cornerPolygon(minkowskiParameter);   
           }
-   }
+          
+          
+         //ROUND corner Left
+                     
+       translate([i*(trapezoidBottomEdge+trapezoidTopEdge)-distanceFirstTrapazoidLongerPartFomEdge-0.74,trapezoidHeight+1,0]) 
+          union(){
+          roundCorner();  
+           translate([40-0.3,0,0]) mirror([1,0,0]) roundCorner();
+          }
+          
+            if(i<numberOfMaleConnectors-1){
+          //ROUND corner Right     
+          translate([i*(trapezoidBottomEdge+trapezoidTopEdge)-distanceFirstTrapazoidLongerPartFomEdge-0.74+trapezoidTopEdge+1.8,trapezoidHeight+1,0]) 
+          union(){
+          roundCorner();  
+           translate([40-0.3,0,0]) mirror([1,0,0]) roundCorner();      
+              
+              }}
+    
+          
+          
+}
 }
  
 
@@ -246,132 +267,12 @@ module trapezoidRows(minkowskiParameter=true) {
 ************************************************************************************************/
 
 module trapezoidFringe(minkowskiParameter=true){
-    
-      translate([distanceFirstTrapazoidLongerPartFomEdge,0-trapezoidHeight,0.0]) trapezoidRows(minkowskiParameter); 
-      translate([distanceFirstTrapazoidLongerPartFomEdge+matInnerRectangleLengthA,distanceFirstTrapazoidLongerPartFomEdge,0.0])  rotate([0,0,90])trapezoidRows(minkowskiParameter); 
-      translate([matInnerRectangleLengthA-distanceFirstTrapazoidLongerPartFomEdge,matInnerRectangleLengthA+trapezoidHeight,0.0])  rotate([0,0,180])trapezoidRows(minkowskiParameter); 
-      translate([0-trapezoidHeight,matInnerRectangleLengthA-distanceFirstTrapazoidLongerPartFomEdge,0]) rotate([0,0,270])trapezoidRows(minkowskiParameter); 
+    //ToDo [2 +7 +2  -2] -> look for constants 
+      translate([distanceFirstTrapazoidLongerPartFomEdge,0-trapezoidHeight-2,0.0]) trapezoidRows(minkowskiParameter); 
+      translate([distanceFirstTrapazoidLongerPartFomEdge+matInnerRectangleLengthA+7,distanceFirstTrapazoidLongerPartFomEdge,0.0])  rotate([0,0,90])trapezoidRows(minkowskiParameter); 
+      translate([matInnerRectangleLengthA-distanceFirstTrapazoidLongerPartFomEdge,matInnerRectangleLengthA+trapezoidHeight+2,0.0])  rotate([0,0,180])trapezoidRows(minkowskiParameter); 
+      translate([0-trapezoidHeight-2,matInnerRectangleLengthA-distanceFirstTrapazoidLongerPartFomEdge,0]) rotate([0,0,270])trapezoidRows(minkowskiParameter); 
     }
   
-//    
-//    
-//  
-//
-//
-// difference() {
-// minkowski(){
-//    union(){
-//        translate([0,0,0]) innerMatRectangle(matInnerRectangleLengthA,matInnerRectangleLengthB);
-//        trapezoidFringe();
-//        //trapezoid_rows();
-//        //        translate([-trapezoid_height-distance_first_trapezoid,distance_first_trapezoid+trapezoid_height,0]) rotate([0,180,270]) //trapezoid_rows();
-//}
-//    circle(1);
-//}
-//
-//!translate([-trapezoidBottomEdge+6,-trapezoidHeight,0]) mirror([0,1,0]) intersection() {
-// minkowski(){
-//    union(){
-//        translate([0,0,0]) innerMatRectangle(matInnerRectangleLengthA,matInnerRectangleLengthB);
-//        trapezoidFringe();
-//        //trapezoid_rows();
-//        //        translate([-trapezoid_height-distance_first_trapezoid,distance_first_trapezoid+trapezoid_height,0]) rotate([0,180,270]) //trapezoid_rows();
-//}
-//    circle(1);
-//}
-//
-//translate([0,-trapezoidHeight+1,0]) square([matInnerRectangleLengthA ,trapezoidHeight], center=false);
-//
-// }
-//
-//}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*****************************************************************************************************
-                                                ...Possibilities...  
-******************************************************************************************************/
-
-
-
-
-//********************
-//*** Variant II:
-//********************
-////polygon(points = [ [x, y], ... ], paths = [ [p1, p2, p3..], ...], convexity = N);
-//difference(){
-//polygon(points=[[(trapezoid_bottom_edge - trapezoid_top_edge)/2.0 ,   trapezoid_height],
-//                [0,0],
-//                [trapezoid_bottom_edge  ,   0],
-//                [trapezoid_bottom_edge - (trapezoid_bottom_edge - trapezoid_top_edge)/2.0 ,   trapezoid_height]]);
-//
-//difference(){
-// translate([0,0]) square([1.15,0.8]);                 
-// intersection(){               
-//   resize([2,1.5]) translate([1.24,1,0]) circle(1);                        
-// }     
-// }
-//translate([0,-1+0.01]) square([2,1]);   
-// }
-// 
-
-
-//polygon(points = [ [x, y], ... ], paths = [ [p1, p2, p3..], ...], convexity = N);
-
-
-
-//********************
-//*** Variant III:
-//********************
-
-
-//translate([-38,0,0])
-//hull()
-//{
-//#translate([0,0,0])
-//resize([1.15,0.8,0]) cylinder(r=2,h=2);
-//#translate([(trapezoid_bottom_edge - trapezoid_top_edge)/2.0 ,   trapezoid_height])
-//resize([1.15,0.8,0]) cylinder(r=2,h=2);
-//#translate([trapezoid_bottom_edge  ,   0])
-//resize([1.15,0.8,0]) cylinder(r=2,h=2);
-//#translate([trapezoid_bottom_edge - (trapezoid_bottom_edge - trapezoid_top_edge)/2.0 ,   trapezoid_height])
-//resize([1.15,0.8,0]) cylinder(r=2,h=2);}
 
